@@ -1,0 +1,27 @@
+<h2>Subir nuevo producto</h2>
+<form action="/dashboard" method="POST">
+  <label for="name">Nombre:</label>
+  <input type="text" id="name" name="name" required><br>
+  <label for="description">Descripción:</label>
+  <textarea id="description" name="description" required></textarea><br>
+  <label for="image">Imagen (URL):</label>
+  <input type="text" id="image" name="image" required><br>
+  <label for="category">Categoría:</label>
+  <select id="category" name="category" required>
+    <option value="Camisetas">Camisetas</option>
+    <option value="Pantalones">Pantalones</option>
+    <option value="Zapatos">Zapatos</option>
+    <option value="Accesorios">Accesorios</option>
+  </select><br>
+  <label for="size">Talla:</label>
+  <select id="size" name="size" required>
+    <option value="XS">XS</option>
+    <option value="S">S</option>
+    <option value="M">M</option>
+    <option value="L">L</option>
+    <option value="XL">XL</option>
+  </select><br>
+  <label for="price">Precio:</label>
+  <input type="number" id="price" name="price" step="0.01" required><br>
+  <button type="submit" class="btn">Subir producto</button>
+</form>

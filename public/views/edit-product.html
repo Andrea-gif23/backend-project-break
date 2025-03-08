@@ -1,0 +1,27 @@
+<h2>Editar producto</h2>
+<form action="/dashboard/{{product._id}}/update" method="POST">
+  <label for="name">Nombre:</label>
+  <input type="text" id="name" name="name" value="{{product.name}}" required><br>
+  <label for="description">Descripción:</label>
+  <textarea id="description" name="description" required>{{product.description}}</textarea><br>
+  <label for="image">Imagen (URL):</label>
+  <input type="text" id="image" name="image" value="{{product.image}}" required><br>
+  <label for="category">Categoría:</label>
+  <select id="category" name="category" required>
+    <option value="Camisetas" {{#if (eq product.category 'Camisetas')}}selected{{/if}}>Camisetas</option>
+    <option value="Pantalones" {{#if (eq product.category 'Pantalones')}}selected{{/if}}>Pantalones</option>
+    <option value="Zapatos" {{#if (eq product.category 'Zapatos')}}selected{{/if}}>Zapatos</option>
+    <option value="Accesorios" {{#if (eq product.category 'Accesorios')}}selected{{/if}}>Accesorios</option>
+  </select><br>
+  <label for="size">Talla:</label>
+  <select id="size" name="size" required>
+    <option value="XS" {{#if (eq product.size 'XS')}}selected{{/if}}>XS</option>
+    <option value="S" {{#if (eq product.size 'S')}}selected{{/if}}>S</option>
+    <option value="M" {{#if (eq product.size 'M')}}selected{{/if}}>M</option>
+    <option value="L" {{#if (eq product.size 'L')}}selected{{/if}}>L</option>
+    <option value="XL" {{#if (eq product.size 'XL')}}selected{{/if}}>XL</option>
+  </select><br>
+  <label for="price">Precio:</label>
+  <input type="number" id="price" name="price" step="0.01" value="{{product.price}}" required><br>
+  <button type="submit" class="btn">Actualizar producto</button>
+</form>

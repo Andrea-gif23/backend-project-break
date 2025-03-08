@@ -1,0 +1,16 @@
+<h2>Dashboard</h2>
+<a href="/dashboard/new" class="btn">Subir nuevo producto</a>
+<div class="product-list">
+  {{#each products}}
+    <div class="product-card">
+      <h3>{{this.name}}</h3>
+      <img src="{{this.image}}" alt="{{this.name}}">
+      <p>{{this.description}}</p>
+      <a href="/dashboard/{{this._id}}">Ver detalle</a>
+      <a href="/dashboard/{{this._id}}/edit">Editar</a>
+      <form action="/dashboard/{{this._id}}/delete" method="POST">
+        <button type="submit" class="btn-delete">Eliminar</button>
+      </form>
+    </div>
+  {{/each}}
+</div>
