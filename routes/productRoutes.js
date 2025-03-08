@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
 
-// Rutas para la tienda
+
 router.get('/products', productController.showProducts);
 router.get('/products/:productId', productController.showProductById);
 
-// Rutas para el dashboard
 router.get('/dashboard', productController.showDashboard);
 router.get('/dashboard/new', productController.showNewProduct);
 router.post('/dashboard', productController.createProduct);

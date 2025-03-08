@@ -1,75 +1,116 @@
 const Product = require('../models/Product');
+const path = require('path');
 
-// Mostrar todos los productos
+const baseHtml = (title, content) => `
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <h1>Tienda de Ropa</h1>
+      <nav>
+        <a href="/products">Catálogo</a>
+        <a href="/dashboard">Dashboard</a>
+      </nav>
+    </header>
+    <main>
+      ${content}
+    </main>
+    <footer>
+      <p>&copy; 2023 Tienda de Ropa</p>
+    </footer>
+  </body>
+  </html>
+`;
+
+
 const showProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.send(`
-      <h1>Catálogo de productos</h1>
-      ${products.map(product => `
-        <div>
-          <h2>${product.name}</h2>
-          <p>${product.description}</p>
-          <img src="${product.image}" alt="${product.name}" width="200" />
-          <a href="/products/${product._id}">Ver detalle</a>
-        </div>
-      `).join('')}
+    const productList = products.map(product => `
+      <div class="product-card">
+        <h2>${product.name}</h2>
+        <img src="${product.image}" alt="${product.name}" width="200">
+        <p>${product.description}</p>
+        <a href="/products/${product._id}">Ver detalle</a>
+      </div>
+    `).join('');
+
+    const html = baseHtml('Catálogo de Productos', `
+      <h2>Catálogo de Productos</h2>
+      <div class="product-list">
+        ${productList}
+      </div>
     `);
+
+    res.send(html);
   } catch (err) {
     res.status(500).send('Error al cargar los productos');
   }
 };
 
-// Mostrar el detalle de un producto
 const showProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.productId);
     if (!product) {
       return res.status(404).send('Producto no encontrado');
     }
-    res.send(`
-      <h1>${product.name}</h1>
+
+    const html = baseHtml(product.name, `
+      <h2>${product.name}</h2>
+      <img src="${product.image}" alt="${product.name}" width="200">
       <p>${product.description}</p>
-      <img src="${product.image}" alt="${product.name}" width="200" />
-      <p>Categoría: ${product.category}</p>
-      <p>Talla: ${product.size}</p>
-      <p>Precio: $${product.price}</p>
+      <p><strong>Categoría:</strong> ${product.category}</p>
+      <p><strong>Talla:</strong> ${product.size}</p>
+      <p><strong>Precio:</strong> $${product.price}</p>
       <a href="/products">Volver al catálogo</a>
     `);
+
+    res.send(html);
   } catch (err) {
     res.status(500).send('Error al cargar el producto');
   }
 };
 
-// Mostrar el dashboard con todos los productos
+
 const showDashboard = async (req, res) => {
   try {
     const products = await Product.find();
-    res.send(`
-      <h1>Dashboard</h1>
-      <a href="/dashboard/new">Subir nuevo producto</a>
-      ${products.map(product => `
-        <div>
-          <h2>${product.name}</h2>
-          <p>${product.description}</p>
-          <img src="${product.image}" alt="${product.name}" width="200" />
-          <a href="/dashboard/${product._id}">Ver detalle</a>
-          <a href="/dashboard/${product._id}/edit">Editar</a>
-          <form action="/dashboard/${product._id}/delete" method="POST">
-            <button type="submit">Eliminar</button>
-          </form>
-        </div>
-      `).join('')}
+    const productList = products.map(product => `
+      <div class="product-card">
+        <h2>${product.name}</h2>
+        <img src="${product.image}" alt="${product.name}" width="200">
+        <p>${product.description}</p>
+        <a href="/dashboard/${product._id}">Ver detalle</a>
+        <a href="/dashboard/${product._id}/edit">Editar</a>
+        <form action="/dashboard/${product._id}/delete" method="POST">
+          <button type="submit">Eliminar</button>
+        </form>
+      </div>
+    `).join('');
+
+    const html = baseHtml('Dashboard', `
+      <h2>Dashboard</h2>
+      <a href="/dashboard/new" class="btn">Subir nuevo producto</a>
+      <div class="product-list">
+        ${productList}
+      </div>
     `);
+
+    res.send(html);
   } catch (err) {
     res.status(500).send('Error al cargar el dashboard');
   }
 };
 
-// Mostrar el formulario para subir un nuevo producto
 const showNewProduct = (req, res) => {
-  res.send(`
-    <h1>Subir nuevo producto</h1>
+  const html = baseHtml('Subir Nuevo Producto', `
+    <h2>Subir nuevo producto</h2>
     <form action="/dashboard" method="POST">
       <label for="name">Nombre:</label>
       <input type="text" id="name" name="name" required><br>
@@ -97,9 +138,10 @@ const showNewProduct = (req, res) => {
       <button type="submit">Subir producto</button>
     </form>
   `);
+
+  res.send(html);
 };
 
-// Crear un nuevo producto
 const createProduct = async (req, res) => {
   try {
     const { name, description, image, category, size, price } = req.body;
@@ -111,40 +153,44 @@ const createProduct = async (req, res) => {
   }
 };
 
-// Mostrar el detalle de un producto en el dashboard
+
 const showProductDashboard = async (req, res) => {
   try {
     const product = await Product.findById(req.params.productId);
     if (!product) {
       return res.status(404).send('Producto no encontrado');
     }
-    res.send(`
-      <h1>${product.name}</h1>
+
+    const html = baseHtml(product.name, `
+      <h2>${product.name}</h2>
+      <img src="${product.image}" alt="${product.name}" width="200">
       <p>${product.description}</p>
-      <img src="${product.image}" alt="${product.name}" width="200" />
-      <p>Categoría: ${product.category}</p>
-      <p>Talla: ${product.size}</p>
-      <p>Precio: $${product.price}</p>
+      <p><strong>Categoría:</strong> ${product.category}</p>
+      <p><strong>Talla:</strong> ${product.size}</p>
+      <p><strong>Precio:</strong> $${product.price}</p>
       <a href="/dashboard/${product._id}/edit">Editar</a>
       <form action="/dashboard/${product._id}/delete" method="POST">
         <button type="submit">Eliminar</button>
       </form>
       <a href="/dashboard">Volver al dashboard</a>
     `);
+
+    res.send(html);
   } catch (err) {
     res.status(500).send('Error al cargar el producto');
   }
 };
 
-// Mostrar el formulario para editar un producto
+
 const showEditProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.productId);
     if (!product) {
       return res.status(404).send('Producto no encontrado');
     }
-    res.send(`
-      <h1>Editar producto</h1>
+
+    const html = baseHtml('Editar Producto', `
+      <h2>Editar producto</h2>
       <form action="/dashboard/${product._id}/update" method="POST">
         <label for="name">Nombre:</label>
         <input type="text" id="name" name="name" value="${product.name}" required><br>
@@ -172,12 +218,14 @@ const showEditProduct = async (req, res) => {
         <button type="submit">Actualizar producto</button>
       </form>
     `);
+
+    res.send(html);
   } catch (err) {
     res.status(500).send('Error al cargar el formulario de edición');
   }
 };
 
-// Actualizar un producto
+
 const updateProduct = async (req, res) => {
   try {
     const { name, description, image, category, size, price } = req.body;
@@ -188,7 +236,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
-// Eliminar un producto
+
 const deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.productId);

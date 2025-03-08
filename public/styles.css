@@ -6,7 +6,7 @@ body {
   }
   
   header {
-    background-color: #333;
+    background-color: #7dccfd;
     color: #fff;
     padding: 1rem;
     text-align: center;
@@ -34,7 +34,7 @@ body {
     border-radius: 5px;
     padding: 1rem;
     width: calc(33.333% - 2rem);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(125, 167, 230, 0.1);
   }
   
   .product-card img {
@@ -60,7 +60,7 @@ body {
   footer {
     text-align: center;
     padding: 1rem;
-    background-color: #333;
+    background-color: #7dccfd;
     color: #fff;
     position: fixed;
     bottom: 0;
